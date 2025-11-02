@@ -12,7 +12,7 @@ import { Switch } from '../../components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { GlitchText } from '../../components/GlitchText';
 import { ScrollReveal } from '../../components/ScrollReveal';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 export function TestimonialForm() {
   const { id } = useParams();

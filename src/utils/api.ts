@@ -157,15 +157,12 @@ async function apiFetch<T>(url: string, options?: RequestInit, fallback?: () => 
     apiAvailable = true;
     return response.json();
   } catch (error: any) {
-    // Don't log CORS errors as warnings in development - they're expected
-    if (!isDevelopment) {
-      console.warn(`API request failed for ${url}:`, error.message);
-    }
-    
+    // Silently use fallback in both dev and production - no warnings needed
     // If we have a fallback, use it
     if (fallback) {
-      if (!isDevelopment) {
-        console.log(`Using fallback data for: ${url}`);
+      // Only log in development mode
+      if (isDevelopment) {
+        console.log(`Using mock data for: ${url}`);
       }
       apiAvailable = false;
       await delay(300); // Simulate network delay

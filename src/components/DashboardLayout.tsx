@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { dashboardApi, authStorage } from '../utils/dashboardApi';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface DashboardLayoutProps {
   children: ReactNode;

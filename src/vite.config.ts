@@ -9,6 +9,10 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './'),
     },
+    dedupe: ['three', '@react-three/fiber', '@react-three/drei'],
+  },
+  optimizeDeps: {
+    include: ['three', '@react-three/fiber', '@react-three/drei'],
   },
   server: {
     port: 5173,
