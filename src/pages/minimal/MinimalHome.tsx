@@ -241,54 +241,58 @@ function MinimalHero() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <Link to="/contact" className="w-full sm:w-auto">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative w-full px-12 py-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-2xl font-medium overflow-hidden inline-flex items-center justify-center gap-3 shadow-2xl shadow-neutral-900/30 hover:shadow-neutral-900/40 transition-shadow"
-              >
-                {/* Animated gradient background */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  style={{ backgroundSize: '200% 200%' }}
-                />
-                {/* Animated shine effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{
-                    x: ['-200%', '200%'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                    repeatDelay: 1
-                  }}
-                />
-                <span className="relative flex items-center gap-3">
-                  <span>Book a Free Discovery Call</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </span>
-              </motion.button>
-            </Link>
+            <div key="cta-contact" className="w-full sm:w-auto">
+              <Link to="/contact">
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative w-full px-12 py-6 bg-gradient-to-r from-neutral-900 to-neutral-800 text-white rounded-2xl font-medium overflow-hidden inline-flex items-center justify-center gap-3 shadow-2xl shadow-neutral-900/30 hover:shadow-neutral-900/40 transition-shadow"
+                >
+                  {/* Animated gradient background */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{ backgroundSize: '200% 200%' }}
+                  />
+                  {/* Animated shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    animate={{
+                      x: ['-200%', '200%'],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear",
+                      repeatDelay: 1
+                    }}
+                  />
+                  <span className="relative flex items-center gap-3">
+                    <span>Book a Free Discovery Call</span>
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </Link>
+            </div>
 
-            <Link to="/work" className="w-full sm:w-auto">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full px-12 py-6 bg-white/70 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-900 rounded-2xl font-medium hover:border-neutral-300 hover:bg-white/90 hover:shadow-2xl hover:shadow-neutral-900/10 transition-all"
-              >
-                View Case Studies
-              </motion.button>
-            </Link>
+            <div key="cta-work" className="w-full sm:w-auto">
+              <Link to="/work">
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full px-12 py-6 bg-white/70 backdrop-blur-xl border-2 border-neutral-200/60 text-neutral-900 rounded-2xl font-medium hover:border-neutral-300 hover:bg-white/90 hover:shadow-2xl hover:shadow-neutral-900/10 transition-all"
+                >
+                  View Case Studies
+                </motion.button>
+              </Link>
+            </div>
           </motion.div>
 
           {/* Trust Signal */}
@@ -634,7 +638,7 @@ export function MinimalHome() {
                     <div className="flex gap-1 mt-4">
                       {[...Array(5)].map((_, i) => (
                         <Star
-                          key={i}
+                          key={`${testimonial._id}-star-${i}`}
                           size={16}
                           className={i < testimonial.rating! ? 'fill-yellow-400 text-yellow-400' : 'text-neutral-300'}
                         />
@@ -771,17 +775,20 @@ export function MinimalHome() {
                 Join 50+ successful companies who've transformed their products with data-driven design. Get a free product audit & personalized roadmap.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to="/contact" className="flex-1 sm:flex-initial">
-                  <motion.button
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-full px-8 py-4 bg-neutral-900 text-white rounded-xl font-medium shadow-xl shadow-neutral-900/20 hover:shadow-2xl hover:shadow-neutral-900/30 transition-all inline-flex items-center justify-center gap-2"
-                  >
-                    <span>Claim Free Audit</span>
-                    <ArrowRight size={18} />
-                  </motion.button>
-                </Link>
+                <div key="audit-cta" className="flex-1 sm:flex-initial">
+                  <Link to="/contact">
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full px-8 py-4 bg-neutral-900 text-white rounded-xl font-medium shadow-xl shadow-neutral-900/20 hover:shadow-2xl hover:shadow-neutral-900/30 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <span>Claim Free Audit</span>
+                      <ArrowRight size={18} />
+                    </motion.button>
+                  </Link>
+                </div>
                 <motion.div
+                  key="audit-trust"
                   whileHover={{ scale: 1.05 }}
                   className="flex items-center gap-2 text-sm text-neutral-600 justify-center sm:justify-start"
                 >
@@ -932,7 +939,7 @@ export function MinimalHome() {
                       <div className="flex flex-wrap gap-2">
                         {project.tags.slice(0, 2).map((tag: string, idx: number) => (
                           <span 
-                            key={idx}
+                            key={`${project.id}-tag-${idx}`}
                             className="px-2.5 py-1 bg-neutral-100 rounded-lg text-xs font-medium text-neutral-700"
                           >
                             {tag}
@@ -956,7 +963,7 @@ export function MinimalHome() {
                       <div className="pt-4 border-t border-neutral-100">
                         <div className="grid grid-cols-2 gap-4">
                           {project.keyMetrics.slice(0, 2).map((metric: any, idx: number) => (
-                            <div key={idx}>
+                            <div key={`${project.id}-metric-${idx}`}>
                               <div className="text-2xl font-medium text-neutral-900 mb-0.5">
                                 {metric.value}
                               </div>
@@ -1052,7 +1059,7 @@ export function MinimalHome() {
                 <div className="flex items-center gap-1 mb-6">
                   {[...Array(5)].map((_, i) => (
                     <motion.div
-                      key={i}
+                      key={`${testimonial.id}-star-${i}`}
                       initial={{ opacity: 0, scale: 0 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
@@ -1194,39 +1201,43 @@ export function MinimalHome() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link to="/contact">
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group relative px-12 py-6 bg-white text-neutral-900 rounded-2xl font-medium hover:bg-neutral-50 transition-all inline-flex items-center gap-3 shadow-2xl shadow-white/20 overflow-hidden"
-                >
-                  {/* Shine effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                    animate={{
-                      x: ['-200%', '200%'],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear",
-                      repeatDelay: 1
-                    }}
-                  />
-                  <span className="relative text-lg font-medium">Schedule Free Consultation</span>
-                  <ArrowRight size={20} className="relative group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              </Link>
+              <div key="final-cta-contact">
+                <Link to="/contact">
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group relative px-12 py-6 bg-white text-neutral-900 rounded-2xl font-medium hover:bg-neutral-50 transition-all inline-flex items-center gap-3 shadow-2xl shadow-white/20 overflow-hidden"
+                  >
+                    {/* Shine effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                      animate={{
+                        x: ['-200%', '200%'],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear",
+                        repeatDelay: 1
+                      }}
+                    />
+                    <span className="relative text-lg font-medium">Schedule Free Consultation</span>
+                    <ArrowRight size={20} className="relative group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
+                </Link>
+              </div>
               
-              <Link to="/work">
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-10 py-5 bg-white/10 backdrop-blur-xl border-2 border-white/20 text-white rounded-2xl font-medium hover:bg-white/20 hover:border-white/30 transition-all"
-                >
-                  View Success Stories
-                </motion.button>
-              </Link>
+              <div key="final-cta-work">
+                <Link to="/work">
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-10 py-5 bg-white/10 backdrop-blur-xl border-2 border-white/20 text-white rounded-2xl font-medium hover:bg-white/20 hover:border-white/30 transition-all"
+                  >
+                    View Success Stories
+                  </motion.button>
+                </Link>
+              </div>
             </motion.div>
 
             {/* Final trust signal with urgency */}
