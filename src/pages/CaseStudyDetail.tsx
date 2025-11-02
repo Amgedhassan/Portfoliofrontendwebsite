@@ -111,11 +111,15 @@ export function CaseStudyDetail() {
       <div className="px-6 lg:px-12 mb-20">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal>
-            <div className="aspect-video rounded-3xl overflow-hidden bg-accent">
+            <div className="aspect-video rounded-3xl overflow-hidden bg-neutral-100 dark:bg-neutral-900">
               <img
                 src={project.caseStudyImage}
                 alt={project.title}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'data:image/svg+xml,%3Csvg width="1200" height="675" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="1200" height="675" fill="%23e5e5e5"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="24" fill="%23999"%3ECase study image not available%3C/text%3E%3C/svg%3E';
+                }}
               />
             </div>
           </ScrollReveal>
@@ -181,11 +185,15 @@ export function CaseStudyDetail() {
         <div className="px-6 lg:px-12 mb-20">
           <div className="max-w-6xl mx-auto">
             <ScrollReveal>
-              <div className="aspect-[16/10] rounded-3xl overflow-hidden bg-accent">
+              <div className="aspect-[16/10] rounded-3xl overflow-hidden bg-neutral-100 dark:bg-neutral-900">
                 <img
                   src={project.coverImage}
                   alt={`${project.title} cover`}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'data:image/svg+xml,%3Csvg width="1200" height="750" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="1200" height="750" fill="%23e5e5e5"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="24" fill="%23999"%3ECover image not available%3C/text%3E%3C/svg%3E';
+                  }}
                 />
               </div>
             </ScrollReveal>

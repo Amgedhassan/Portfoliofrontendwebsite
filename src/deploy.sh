@@ -1,52 +1,56 @@
 #!/bin/bash
 
-# Deployment script for Amgad Design Portfolio
-# Run this on your VPS after initial setup
+# Production Deployment Script for VPS
+# This script builds and deploys the portfolio to your VPS
+
+set -e
 
 echo "🚀 Starting deployment process..."
 
-# Navigate to project directory
-cd /var/www/amgad.design || exit
+# Configuration - UPDATE THESE VALUES
+VPS_USER="your-username"          # Your VPS SSH username
+VPS_HOST="your-vps-ip"            # Your VPS IP or domain
+VPS_PATH="/var/www/portfolio"     # Path on VPS
 
-# Pull latest changes from GitHub
-echo "📥 Pulling latest changes from GitHub..."
-git pull origin main
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
-# Install dependencies (only if package.json changed)
-if git diff HEAD@{1} --name-only | grep -q "package.json"; then
-    echo "📦 Installing dependencies..."
-    npm install
-fi
-
-# Build the project
-echo "🔨 Building project..."
-npm run build
-
-# Check if build was successful
-if [ $? -eq 0 ]; then
-    echo "✅ Build completed successfully!"
-    
-    # Set proper permissions
-    echo "🔐 Setting proper permissions..."
-    sudo chown -R www-data:www-data dist/
-    sudo chmod -R 755 dist/
-    
-    # Reload Nginx
-    echo "🔄 Reloading Nginx..."
-    sudo systemctl reload nginx
-    
-    echo "✨ Deployment completed successfully!"
-    echo "🌐 Visit: https://amgad.design"
-else
-    echo "❌ Build failed! Deployment aborted."
+# Check if configuration is updated
+if [ "$VPS_USER" = "your-username" ] || [ "$VPS_HOST" = "your-vps-ip" ]; then
+    echo -e "${RED}❌ Error: Please update VPS configuration in deploy.sh${NC}"
+    echo -e "${YELLOW}Edit the following variables:${NC}"
+    echo "  VPS_USER=\"your-actual-username\""
+    echo "  VPS_HOST=\"your-actual-ip-or-domain\""
     exit 1
 fi
 
-# Display deployment summary
+echo -e "${YELLOW}📦 Installing dependencies...${NC}"
+npm install
+
+echo -e "${YELLOW}🔨 Building production bundle...${NC}"
+npm run build
+
+if [ ! -d "dist" ]; then
+    echo -e "${RED}❌ Error: Build failed - dist/ directory not found${NC}"
+    exit 1
+fi
+
+echo -e "${YELLOW}📤 Uploading to VPS...${NC}"
+rsync -avz --delete --progress dist/ ${VPS_USER}@${VPS_HOST}:${VPS_PATH}/
+
+echo -e "${YELLOW}🔐 Setting correct permissions...${NC}"
+ssh ${VPS_USER}@${VPS_HOST} "sudo chown -R www-data:www-data ${VPS_PATH} && sudo chmod -R 755 ${VPS_PATH}"
+
+echo -e "${YELLOW}🔄 Reloading Nginx...${NC}"
+ssh ${VPS_USER}@${VPS_HOST} "sudo nginx -t && sudo systemctl reload nginx"
+
+echo -e "${GREEN}✅ Deployment complete!${NC}"
+echo -e "${GREEN}🌐 Your site is live at: https://amgad.design${NC}"
 echo ""
-echo "📊 Deployment Summary"
-echo "===================="
-echo "Date: $(date)"
-echo "Commit: $(git rev-parse --short HEAD)"
-echo "Branch: $(git branch --show-current)"
-echo ""
+echo -e "${YELLOW}📊 Quick checks:${NC}"
+echo "  - Test site: https://amgad.design"
+echo "  - View logs: ssh ${VPS_USER}@${VPS_HOST} 'sudo tail -f /var/log/nginx/access.log'"
+echo "  - Dashboard: https://amgad.design/dashboard/login"

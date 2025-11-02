@@ -13,6 +13,7 @@ import { MinimalAbout } from './pages/minimal/MinimalAbout';
 import { MinimalMentorship } from './pages/minimal/MinimalMentorship';
 import { MinimalContact } from './pages/minimal/MinimalContact';
 import { NotFound } from './pages/NotFound';
+import AnimationShowcase from './pages/AnimationShowcase';
 import { Login } from './pages/dashboard/Login';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Projects } from './pages/dashboard/Projects';
@@ -175,6 +176,9 @@ function AppContent() {
             <MinimalFooter />
           </div>
         } />
+        
+        {/* Animation Showcase (Hidden Demo Page) */}
+        <Route path="/animations" element={<AnimationShowcase />} />
         
         <Route path="*" element={
           <div className="min-h-screen bg-white">

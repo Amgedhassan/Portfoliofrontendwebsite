@@ -86,10 +86,14 @@ export function TestimonialCard({ testimonial, index = 0 }: TestimonialCardProps
             <div className="flex items-center gap-4">
               <div className="relative">
                 <img
-                  src={testimonial.authorImage}
+                  src={testimonial.authorImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.authorName)}&background=random`}
                   alt={testimonial.authorName}
                   className="w-12 h-12 object-cover border-2"
                   style={{ borderColor: color }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.authorName)}&background=random`;
+                  }}
                 />
                 {/* Pulse effect */}
                 <motion.div

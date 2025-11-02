@@ -150,11 +150,15 @@ export function Projects() {
 
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* Thumbnail */}
-                  <div className="w-full md:w-48 h-32 border-2 border-primary/30 overflow-hidden shrink-0">
+                  <div className="w-full md:w-48 h-32 border-2 border-primary/30 overflow-hidden shrink-0 bg-neutral-900">
                     <img
                       src={project.coverImage}
                       alt={project.title}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'data:image/svg+xml,%3Csvg width="200" height="130" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="200" height="130" fill="%231a1a1a"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="12" fill="%2300fff2"%3ENo image%3C/text%3E%3C/svg%3E';
+                      }}
                     />
                   </div>
 

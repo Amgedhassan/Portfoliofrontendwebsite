@@ -33,13 +33,17 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary z-20" />
 
             {/* Image Container */}
-            <div className="relative aspect-[16/10] overflow-hidden">
+            <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
               <motion.img
                 src={project.coverImage}
                 alt={project.title}
                 className="w-full h-full object-cover"
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'data:image/svg+xml,%3Csvg width="400" height="250" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="400" height="250" fill="%23e5e5e5"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="16" fill="%23999"%3EImage not available%3C/text%3E%3C/svg%3E';
+                }}
               />
               
               {/* Tech overlay */}

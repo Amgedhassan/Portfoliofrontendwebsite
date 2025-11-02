@@ -164,10 +164,14 @@ export function Testimonials() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <img
-                        src={testimonial.authorImage}
+                        src={testimonial.authorImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.authorName)}&background=random`}
                         alt={testimonial.authorName}
                         className="w-12 h-12 border-2"
                         style={{ borderColor: color }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.authorName)}&background=random`;
+                        }}
                       />
                       <div>
                         <p className="font-mono" style={{ color }}>{testimonial.authorName}</p>
