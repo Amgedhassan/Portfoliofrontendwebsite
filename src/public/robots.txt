@@ -1,0 +1,11 @@
+# Robots.txt for amgad.design
+
+User-agent: *
+Allow: /
+
+# Disallow admin/dashboard areas
+Disallow: /dashboard/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://amgad.design/sitemap.xml
