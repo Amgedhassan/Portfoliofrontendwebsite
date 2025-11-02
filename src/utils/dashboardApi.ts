@@ -1,5 +1,4 @@
 import { CaseStudy, Testimonial, Mentorship, adminApi } from './api';
-import { mockCaseStudies, mockTestimonials, mockMentorshipSessions } from './mockData';
 
 // API Base URL from environment variable with fallback
 // Using type assertion to handle import.meta.env safely
@@ -13,29 +12,17 @@ const getApiBaseUrl = (): string => {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Demo mode configuration
-const DEMO_CREDENTIALS = {
-  email: 'demo@amgad.design',
-  password: 'demo123',
-};
-
-const DEMO_TOKEN = 'DEMO_MODE_TOKEN_12345';
-
 // Auth token management
 const TOKEN_KEY = 'dashboard_auth_token';
-const DEMO_MODE_KEY = 'dashboard_demo_mode';
 
 export const authStorage = {
   getToken: () => localStorage.getItem(TOKEN_KEY),
   setToken: (token: string) => localStorage.setItem(TOKEN_KEY, token),
   removeToken: () => {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(DEMO_MODE_KEY);
     adminApi.clearAuthToken();
   },
   isAuthenticated: () => !!localStorage.getItem(TOKEN_KEY),
-  isDemoMode: () => localStorage.getItem(DEMO_MODE_KEY) === 'true',
-  setDemoMode: (isDemo: boolean) => localStorage.setItem(DEMO_MODE_KEY, isDemo.toString()),
 };
 
 // API helper with auth headers
@@ -70,30 +57,9 @@ async function apiRequest<T>(
   return response.json();
 }
 
-// Mock data storage for demo mode
-let demoProjects = [...mockCaseStudies];
-let demoTestimonials = [...mockTestimonials];
-let demoMentorship = [...mockMentorshipSessions];
-
 export const dashboardApi = {
   // Authentication
   async login(email: string, password: string): Promise<{ token: string; user: any }> {
-    // Check for demo credentials
-    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
-      authStorage.setToken(DEMO_TOKEN);
-      authStorage.setDemoMode(true);
-      return {
-        token: DEMO_TOKEN,
-        user: {
-          email: DEMO_CREDENTIALS.email,
-          name: 'Demo User',
-          role: 'admin',
-        },
-      };
-    }
-
-    // Real API login using the adminApi
-    authStorage.setDemoMode(false);
     try {
       const response = await adminApi.login(email, password);
       authStorage.setToken(response.token);
@@ -111,182 +77,59 @@ export const dashboardApi = {
   },
 
   async logout() {
-    // Reset demo data on logout
-    if (authStorage.isDemoMode()) {
-      demoProjects = [...mockCaseStudies];
-      demoTestimonials = [...mockTestimonials];
-      demoMentorship = [...mockMentorshipSessions];
-    }
     authStorage.removeToken();
   },
 
   // Case Studies / Projects
   async getAllCaseStudies(): Promise<CaseStudy[]> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
-      return demoProjects;
-    }
     return apiRequest<CaseStudy[]>('/case-studies');
   },
 
   async createCaseStudy(data: Partial<CaseStudy>): Promise<CaseStudy> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const newProject: CaseStudy = {
-        _id: `demo-${Date.now()}`,
-        title: data.title || '',
-        slug: data.slug || '',
-        coverImage: data.coverImage || '',
-        caseStudyImage: data.caseStudyImage || '',
-        problemStatement: data.problemStatement || '',
-        myRole: data.myRole || '',
-        keyMetrics: data.keyMetrics || [],
-        tags: data.tags || [],
-        isFeatured: data.isFeatured || false,
-        createdAt: new Date().toISOString(),
-      };
-      demoProjects.push(newProject);
-      return newProject;
-    }
     return adminApi.createCaseStudy(data);
   },
 
   async updateCaseStudy(slugOrId: string, data: Partial<CaseStudy>): Promise<CaseStudy> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const index = demoProjects.findIndex(p => p._id === slugOrId || p.slug === slugOrId);
-      if (index !== -1) {
-        demoProjects[index] = { ...demoProjects[index], ...data };
-        return demoProjects[index];
-      }
-      throw new Error('Project not found');
-    }
-    // Use slug for real API
     const slug = data.slug || slugOrId;
     return adminApi.updateCaseStudy(slug, data);
   },
 
   async deleteCaseStudy(slugOrId: string): Promise<void> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      demoProjects = demoProjects.filter(p => p._id !== slugOrId && p.slug !== slugOrId);
-      return;
-    }
     await adminApi.deleteCaseStudy(slugOrId);
   },
 
   // Testimonials
   async getAllTestimonials(): Promise<Testimonial[]> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return demoTestimonials;
-    }
     return apiRequest<Testimonial[]>('/testimonials');
   },
 
   async createTestimonial(data: Partial<Testimonial>): Promise<Testimonial> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const newTestimonial: Testimonial = {
-        _id: `demo-${Date.now()}`,
-        quote: data.quote || '',
-        authorName: data.authorName || '',
-        authorTitle: data.authorTitle || '',
-        clientCompany: data.clientCompany,
-        authorImage: data.authorImage,
-        rating: data.rating || 5,
-        projectName: data.projectName,
-        testimonialType: data.testimonialType || 'Client',
-        isFeatured: data.isFeatured || false,
-        createdAt: new Date().toISOString(),
-      };
-      demoTestimonials.push(newTestimonial);
-      return newTestimonial;
-    }
     return adminApi.createTestimonial(data);
   },
 
   async updateTestimonial(id: string, data: Partial<Testimonial>): Promise<Testimonial> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const index = demoTestimonials.findIndex(t => t._id === id);
-      if (index !== -1) {
-        demoTestimonials[index] = { ...demoTestimonials[index], ...data };
-        return demoTestimonials[index];
-      }
-      throw new Error('Testimonial not found');
-    }
     return adminApi.updateTestimonial(id, data);
   },
 
   async deleteTestimonial(id: string): Promise<void> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      demoTestimonials = demoTestimonials.filter(t => t._id !== id);
-      return;
-    }
     await adminApi.deleteTestimonial(id);
   },
 
   // Mentorship Sessions
   async getAllMentorshipSessions(): Promise<Mentorship[]> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return demoMentorship;
-    }
     return apiRequest<Mentorship[]>('/mentorship');
   },
 
   async createMentorshipSession(data: Partial<Mentorship>): Promise<Mentorship> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const newSession: Mentorship = {
-        _id: `demo-${Date.now()}`,
-        title: data.title || '',
-        slug: data.slug || '',
-        sessionType: data.sessionType || 'one-on-one',
-        targetAudience: data.targetAudience || '',
-        description: data.description || '',
-        whatToExpect: data.whatToExpect || [],
-        preparationRequired: data.preparationRequired,
-        duration: data.duration || '60 minutes',
-        price: data.price || 0,
-        offerPrice: data.offerPrice,
-        offerEndDate: data.offerEndDate,
-        currency: data.currency || 'USD',
-        bookingLink: data.bookingLink || '',
-        testimonials: data.testimonials,
-        isActive: data.isActive !== undefined ? data.isActive : true,
-        isFeatured: data.isFeatured || false,
-        createdAt: new Date().toISOString(),
-      };
-      demoMentorship.push(newSession);
-      return newSession;
-    }
     return adminApi.createMentorship(data);
   },
 
   async updateMentorshipSession(slugOrId: string, data: Partial<Mentorship>): Promise<Mentorship> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const index = demoMentorship.findIndex(m => m._id === slugOrId || m.slug === slugOrId);
-      if (index !== -1) {
-        demoMentorship[index] = { ...demoMentorship[index], ...data };
-        return demoMentorship[index];
-      }
-      throw new Error('Mentorship session not found');
-    }
-    // Use slug for real API
     const slug = data.slug || slugOrId;
     return adminApi.updateMentorship(slug, data);
   },
 
   async deleteMentorshipSession(slugOrId: string): Promise<void> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      demoMentorship = demoMentorship.filter(m => m._id !== slugOrId && m.slug !== slugOrId);
-      return;
-    }
     await adminApi.deleteMentorship(slugOrId);
   },
 
@@ -299,19 +142,6 @@ export const dashboardApi = {
     featuredTestimonials: number;
     featuredSessions: number;
   }> {
-    if (authStorage.isDemoMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return {
-        totalProjects: demoProjects.length,
-        totalTestimonials: demoTestimonials.length,
-        totalMentorshipSessions: demoMentorship.length,
-        featuredProjects: demoProjects.filter(p => p.isFeatured).length,
-        featuredTestimonials: demoTestimonials.filter(t => t.isFeatured).length,
-        featuredSessions: demoMentorship.filter(m => m.isFeatured).length,
-      };
-    }
-    
-    // For real API, calculate stats from the data
     try {
       const [projects, testimonials, mentorship] = await Promise.all([
         apiRequest<CaseStudy[]>('/case-studies'),

@@ -20,23 +20,15 @@ export function Login() {
     setLoading(true);
 
     try {
-      const result = await dashboardApi.login(email, password);
+      await dashboardApi.login(email, password);
       
-      // Check if demo mode
-      const isDemo = email === 'demo@amgad.design';
-      
-      toast.success(
-        isDemo 
-          ? 'Demo mode activated! All changes are temporary.' 
-          : 'Access granted! Entering the system...', 
-        {
-          style: {
-            background: isDemo ? 'rgba(255, 0, 110, 0.1)' : 'rgba(0, 255, 242, 0.1)',
-            border: isDemo ? '1px solid #ff006e' : '1px solid #00fff2',
-            color: isDemo ? '#ff006e' : '#00fff2',
-          },
-        }
-      );
+      toast.success('Access granted! Entering the system...', {
+        style: {
+          background: 'rgba(0, 255, 242, 0.1)',
+          border: '1px solid #00fff2',
+          color: '#00fff2',
+        },
+      });
       setTimeout(() => navigate('/dashboard'), 500);
     } catch (error) {
       toast.error('Access denied! Invalid credentials.', {
@@ -219,44 +211,6 @@ export function Login() {
 
           {/* Bottom accent line */}
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-        </motion.div>
-
-        {/* Demo Credentials Info */}
-        <motion.div
-          className="mt-8 border-2 border-accent/20 bg-accent/5 backdrop-blur-sm p-6 relative"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          style={{
-            boxShadow: '0 0 20px rgba(255, 0, 110, 0.1)',
-          }}
-        >
-          {/* Tech corners */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-accent" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-accent" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-accent" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-accent" />
-
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="w-2 h-2 bg-accent rounded-full animate-pulse"
-                style={{
-                  boxShadow: '0 0 10px rgba(255, 0, 110, 0.8)',
-                }}
-              />
-              <p className="text-accent font-mono text-sm">DEMO_MODE_AVAILABLE</p>
-            </div>
-            <p className="text-muted-foreground text-sm mb-3">
-              Test the dashboard with demo credentials:
-            </p>
-            <div className="bg-background/50 border border-accent/30 p-3 rounded font-mono text-sm space-y-1">
-              <p className="text-primary">Email: <span className="text-accent">demo@amgad.design</span></p>
-              <p className="text-primary">Password: <span className="text-accent">demo123</span></p>
-            </div>
-            <p className="text-muted-foreground text-xs mt-3">
-              All changes in demo mode are temporary and reset on logout
-            </p>
-          </div>
         </motion.div>
 
         {/* Footer text */}

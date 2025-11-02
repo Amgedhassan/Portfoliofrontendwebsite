@@ -15,7 +15,6 @@ import {
 import { Button } from './ui/button';
 import { dashboardApi, authStorage } from '../utils/dashboardApi';
 import { toast } from 'sonner@2.0.3';
-import { TestTube } from 'lucide-react';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -51,8 +50,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     }
     return location.pathname.startsWith(path);
   };
-
-  const isDemoMode = authStorage.isDemoMode();
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -93,34 +90,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <p className="text-muted-foreground font-mono text-xs">v2.0.1</p>
             </div>
           </div>
-          
-          {/* Demo Mode Badge - Sidebar */}
-          {authStorage.isDemoMode() && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-3 flex items-center gap-2 px-3 py-2 border border-accent bg-accent/10 relative"
-              style={{
-                boxShadow: '0 0 15px rgba(255, 0, 110, 0.2)',
-              }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-              >
-                <TestTube size={12} className="text-accent" />
-              </motion.div>
-              <span className="text-accent font-mono text-xs">DEMO MODE</span>
-              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-accent" />
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-accent" />
-            </motion.div>
-          )}
         </div>
 
         {/* Navigation */}
